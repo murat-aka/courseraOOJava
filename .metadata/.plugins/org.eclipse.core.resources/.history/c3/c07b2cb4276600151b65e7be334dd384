@@ -45,7 +45,13 @@ public class HelloWorld extends PApplet
 		// Play around with these numbers and see what happens!
 		this.background(200, 200, 200);
 		this.background(0, 255, 0);
-	
+		this.colorMode(RGB, 1000);
+		for (int i = 0; i < 1000; i++) {
+			  for (int j = 0; j < 1000; j++) {
+			    stroke(i, j, 0);
+			    point(i, j);
+			  }
+	    }
 
 		  
 	
