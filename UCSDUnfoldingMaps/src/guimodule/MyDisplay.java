@@ -14,7 +14,14 @@ public class MyDisplay extends PApplet {
 	
 	public void draw(){
 		
-		ellipse(50,100,75,75);
+		fill(255,255,0);
+		ellipse(200,200,390,390);
+		fill(0,0,0);
+		ellipse(120,130,50,70);
+		ellipse(280,130,50,70);
+		
+		noFill();
+		arc(200,280, 75,75,0, PI);
 	}
 
 }

@@ -75,12 +75,53 @@ public class EarthquakeCityMap extends PApplet {
 	    
 	    // These print statements show you (1) all of the relevant properties 
 	    // in the features, and (2) how to get one property and use it
+	    
 	    if (earthquakes.size() > 0) {
-	    	PointFeature f = earthquakes.get(0);
-	    	System.out.println(f.getProperties());
+	    	//System.out.println("size: "+earthquakes.size());
+	      for(int i=0;i<earthquakes.size();i++){
+	    	PointFeature f = earthquakes.get(i);
+	    	//System.out.println(f.getProperties());
 	    	Object magObj = f.getProperty("magnitude");
 	    	float mag = Float.parseFloat(magObj.toString());
+	    	
+	    	//SimplePointMarker p= new SimplePointMarker(f.getLocation());
+	    	//markers.add(createMarker(f));
+	    	//markers.add(p);
+	    	//System.out.println(markers.get(0));
 	    	// PointFeatures also have a getLocation method
+	    	
+	    	SimplePointMarker p= createMarker(f);
+	    	
+	        
+	        
+	        if(mag<4){
+	         int myColor = color(0, 0,255 );
+	         p.setRadius(5);
+	         p.setColor(myColor);
+	         markers.add(p);
+	        }
+	        
+	        if(mag>4 && mag<5){
+		         int myColor = color(255, 255, 0);
+		         p.setRadius(10);
+		         p.setColor(myColor);
+		         markers.add(p);
+		    }
+	        
+	        if(mag>=5){
+		         int myColor = color(255, 0, 0);
+		         p.setRadius(20);
+		         p.setColor(myColor);
+		         markers.add(p);
+		    }
+	        
+	        
+	        
+	        
+	        
+	      }
+	      map.addMarkers(markers);
+	      
 	    }
 	    
 	    // Here is an example of how to use Processing's color method to generate 
@@ -96,12 +137,17 @@ public class EarthquakeCityMap extends PApplet {
 	private SimplePointMarker createMarker(PointFeature feature)
 	{
 		// finish implementing and use this method, if it helps.
+		
+		
+		
+	
 		return new SimplePointMarker(feature.getLocation());
 	}
 	
 	public void draw() {
 	    background(10);
 	    map.draw();
+	
 	    addKey();
 	}
 
