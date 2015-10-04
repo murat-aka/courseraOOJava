@@ -3,6 +3,8 @@ package module5;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.sun.org.apache.bcel.internal.generic.INSTANCEOF;
+
 import de.fhpotsdam.unfolding.UnfoldingMap;
 import de.fhpotsdam.unfolding.data.Feature;
 import de.fhpotsdam.unfolding.data.GeoJSONReader;
@@ -86,7 +88,7 @@ public class EarthquakeCityMap extends PApplet {
 		List<Feature> cities = GeoJSONReader.loadData(this, cityFile);
 		cityMarkers = new ArrayList<Marker>();
 		for(Feature city : cities) {
-		  cityMarkers.add(new CityMarker(city));
+		  cityMarkers.add(new CityMarker((PointFeature) city));
 		}
 	    
 		//     STEP 3: read in earthquake RSS feed
@@ -133,6 +135,9 @@ public class EarthquakeCityMap extends PApplet {
 		if (lastSelected != null) {
 			lastSelected.setSelected(false);
 			lastSelected = null;
+			lastClicked=null;
+	
+			
 		
 		}
 		selectMarkerIfHover(quakeMarkers);
@@ -146,6 +151,20 @@ public class EarthquakeCityMap extends PApplet {
 	private void selectMarkerIfHover(List<Marker> markers)
 	{
 		// TODO: Implement this method
+	
+		for(Marker marker : markers){
+			
+			if(marker.isInside(map, mouseX, mouseY) && marker.isHidden() == false){
+				
+				lastSelected=(CommonMarker) marker;
+				marker.setSelected(true);
+				
+				//System.out.println("hovered");
+				break;
+			}
+			
+			//System.out.println(marker.getProperties());
+		}
 	}
 	
 	/** The event handler for mouse clicks
@@ -159,8 +178,94 @@ public class EarthquakeCityMap extends PApplet {
 		// TODO: Implement this method
 		// Hint: You probably want a helper method or two to keep this code
 		// from getting too long/disorganized
+		
+		if(lastSelected!=null){
+			
+			    if(lastSelected.equals(lastClicked)){
+			    	unhideMarkers();
+			    	lastClicked=null;
+			    	//lastSelected=null;
+			    	
+			    	
+			    }
+			    else{
+			    	lastClicked=lastSelected;
+			    	hideMarkers(lastClicked);
+			    }
+				//System.out.println(lastClicked.getProperties());
+				
+		}
+		else unhideMarkers();
+		
+		//if(lastClicked.equals(null) )	unhideMarkers();
+			
+		
+		
 	}
 	
+	
+	// loop over and unhide all markers
+	private void hideMarkers(Marker mar) {
+		
+		double km;
+		if(mar instanceof EarthquakeMarker){
+			km=((EarthquakeMarker) mar).threatCircle()*5;
+		
+			//System.out.println(((EarthquakeMarker) mar).threatCircle());
+			
+			for(Marker marker : quakeMarkers) {
+				System.out.println(marker.getDistanceTo(mar.getLocation()));
+				System.out.println(mar.getDistanceTo(marker.getLocation()));
+				
+				//if(marker.equals(mar))continue;
+				if(marker.equals(mar))continue;
+				marker.setHidden(true);
+			}
+				
+			for(Marker marker : cityMarkers) {
+				if(marker.getDistanceTo(mar.getLocation())<km || marker.equals(mar))continue;
+				marker.setHidden(true);
+			}
+		}
+		
+		
+	
+		
+		
+		if(mar instanceof CityMarker){
+			
+		
+				
+			
+				for(Marker marker : quakeMarkers) {
+				  km=((EarthquakeMarker) marker).threatCircle()*5;
+				  
+				
+				  
+				  if(marker.getDistanceTo(mar.getLocation())<km || marker.equals(mar)){
+					  
+					
+					  continue;
+				  }
+				  marker.setHidden(true);
+				}
+				
+				
+			  for(Marker marker2 : cityMarkers) {
+				 
+				  if( marker2.equals(mar))continue;
+				  marker2.setHidden(true);
+			  }
+				
+				
+				
+			
+			
+		}
+			
+		
+
+	}
 	
 	// loop over and unhide all markers
 	private void unhideMarkers() {

@@ -50,6 +50,7 @@ public abstract class EarthquakeMarker extends CommonMarker
 		java.util.HashMap<String, Object> properties = feature.getProperties();
 		float magnitude = Float.parseFloat(properties.get("magnitude").toString());
 		properties.put("radius", 2*magnitude );
+		//properties.put("circle",threatCircle());
 		setProperties(properties);
 		this.radius = 1.75f*getMagnitude();
 	}
@@ -94,6 +95,14 @@ public abstract class EarthquakeMarker extends CommonMarker
 	public void showTitle(PGraphics pg, float x, float y)
 	{
 		// TODO: Implement this method
+		
+		pg.fill(255,255,255);
+		pg.rect(x+10, y-10, 100, 15);
+		pg.fill(0, 0, 0);
+		if( properties.get("country")==null)pg.text("Ocean Quake", x+20, y);
+		if(properties.get("country")!=null)pg.text("Land Quake", x+20, y);
+		
+		//System.out.println("showtitle");
 		
 	}
 
