@@ -2,6 +2,9 @@ package module4;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.jar.Attributes.Name;
+
+import com.sun.org.glassfish.gmbal.NameValue;
 
 import de.fhpotsdam.unfolding.UnfoldingMap;
 import de.fhpotsdam.unfolding.data.Feature;
@@ -33,6 +36,8 @@ public class EarthquakeCityMap extends PApplet {
 	
 	// You can ignore this.  It's to get rid of eclipse warnings
 	private static final long serialVersionUID = 1L;
+	
+	public static final int TRI_SIZE = 5;
 
 	// IF YOU ARE WORKING OFFILINE, change the value of this variable to true
 	private static final boolean offline = false;
@@ -80,7 +85,7 @@ public class EarthquakeCityMap extends PApplet {
 		//earthquakesURL = "test2.atom";
 		
 		// WHEN TAKING THIS QUIZ: Uncomment the next line
-		//earthquakesURL = "quiz1.atom";
+		earthquakesURL = "quiz1.atom";
 		
 		
 		// (2) Reading in earthquake data and geometric properties
@@ -133,25 +138,46 @@ public class EarthquakeCityMap extends PApplet {
 	// TODO: Update this method as appropriate
 	private void addKey() {	
 		// Remember you can use Processing's graphics methods here
-		fill(255, 250, 240);
+	    fill(255, 250, 240);
 		rect(25, 50, 150, 250);
 		
 		fill(0);
 		textAlign(LEFT, CENTER);
 		textSize(12);
 		text("Earthquake Key", 50, 75);
+		text("Size ~ Magnitude", 50, 170);
+		
+
+		
+		fill(200,0,50);
+		triangle(50, 100, 50+TRI_SIZE, 100+2*TRI_SIZE,50-TRI_SIZE, 100+2*TRI_SIZE);
+		
+		fill(0,0,0);
+		text("City Marker", 70, 105);
+		text("Land Quake", 70, 126);
+		text("Ocean Quake", 70, 145);
+		
+		fill(255, 255, 255);
+		ellipse(50, 125, 10, 10);
+		rect(44,140,12,12);
+		
+		
+		
+		
 		
 		fill(color(255, 0, 0));
-		ellipse(50, 125, 15, 15);
+		ellipse(50, 200, 10, 10);
 		fill(color(255, 255, 0));
-		ellipse(50, 175, 10, 10);
+		ellipse(50, 220, 10, 10);
 		fill(color(0, 0, 255));
-		ellipse(50, 225, 5, 5);
+		ellipse(50, 240, 10, 10);
 		
 		fill(0, 0, 0);
-		text("5.0+ Magnitude", 75, 125);
-		text("4.0+ Magnitude", 75, 175);
-		text("Below 4.0", 75, 225);
+		text("Shallow", 75, 200);
+		text("Intermatiate", 75, 220);
+		text("Deep", 75, 240);
+		
+
 	}
 
 	
@@ -165,7 +191,9 @@ public class EarthquakeCityMap extends PApplet {
 		// IMPLEMENT THIS: loop over all countries to check if location is in any of them
 		
 		// TODO: Implement this method using the helper method isInCountry
-		
+		for(Marker marker :  countryMarkers) {
+			if(isInCountry(earthquake,marker))return true;
+		}
 		// not inside any country
 		return false;
 	}
@@ -179,6 +207,43 @@ public class EarthquakeCityMap extends PApplet {
 	private void printQuakes() 
 	{
 		// TODO: Implement this method
+		int countOceanQuakes=0;
+		int temp=countryMarkers.size();
+		for(Marker countryMarker : countryMarkers) {
+			int count = 0;
+			
+			
+			String countryName;
+			countryName = (String) countryMarker.getProperty("name");
+			//System.out.println(countryMarker.getProperty("name"));
+			for(Marker quakeMarker : quakeMarkers) {
+				
+				String quakeCountry;
+				quakeCountry = quakeMarker.getStringProperty("country");
+				if(quakeCountry == countryName){
+					
+					count++;
+				}
+				if(quakeCountry== null) countOceanQuakes++;
+					
+					//System.out.println(quakeCountry);
+
+				//System.out.println(quakeMarker.getStringProperty("country"));
+				//System.out.println(quakeMarker.getProperties());
+			   
+			}
+			
+			if(count>0){
+				System.out.println(countryName+" number of times the quakes happened: "+ count);
+				
+			}
+			
+			
+			
+		}
+		System.out.println("number of ocean quakes: "+countOceanQuakes/temp);
+		
+		
 	}
 	
 	
