@@ -1,6 +1,7 @@
 package module6;
 
 import de.fhpotsdam.unfolding.data.PointFeature;
+import de.fhpotsdam.unfolding.marker.Marker;
 import processing.core.PConstants;
 import processing.core.PGraphics;
 
@@ -10,7 +11,7 @@ import processing.core.PGraphics;
  *
  */
 // TODO: Implement the comparable interface
-public abstract class EarthquakeMarker extends CommonMarker
+public abstract class EarthquakeMarker extends CommonMarker implements Comparable<EarthquakeMarker>
 {
 	
 	// Did the earthquake occur on land?  This will be set by the subclasses.
@@ -56,7 +57,27 @@ public abstract class EarthquakeMarker extends CommonMarker
 	}
 	
 	// TODO: Add the method:
-	// public int compareTo(EarthquakeMarker marker)
+	public int compareTo(EarthquakeMarker marker){
+		
+		Float other= new Float(marker.getMagnitude());
+		Float tthis= new Float(this.getMagnitude());
+		
+		return (tthis).compareTo(other)*-1;
+		
+	
+		/*
+		    if (marker.getMagnitude() < this.getMagnitude())
+		        return -1;
+		    else if (this.getMagnitude() < marker.getMagnitude())
+		        return 1;
+		    else
+		        return 0;*/
+		
+		
+	}
+	
+	
+	
 	
 	
 	// calls abstract method drawEarthquake and then checks age and draws X if needed

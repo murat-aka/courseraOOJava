@@ -29,11 +29,11 @@ public class AirportMap extends PApplet {
 	
 	public void setup() {
 		// setting up PAppler
-		size(800,600, OPENGL);
+		//size(800,600, OPENGL);
 		
 		// setting up map and default events
-		map = new UnfoldingMap(this, 50, 50, 750, 550);
-		MapUtils.createDefaultEventDispatcher(this, map);
+		//map = new UnfoldingMap(this, 50, 50, 750, 550);
+		//MapUtils.createDefaultEventDispatcher(this, map);
 		
 		// get features from airport data
 		List<PointFeature> features = ParseFeed.parseAirports(this, "airports.dat");
@@ -75,7 +75,7 @@ public class AirportMap extends PApplet {
 			System.out.println(sl.getProperties());
 			
 			//UNCOMMENT IF YOU WANT TO SEE ALL ROUTES
-			//routeList.add(sl);
+			routeList.add(sl);
 		}
 		
 		
@@ -83,15 +83,15 @@ public class AirportMap extends PApplet {
 		//UNCOMMENT IF YOU WANT TO SEE ALL ROUTES
 		//map.addMarkers(routeList);
 		
-		map.addMarkers(airportList);
+		//map.addMarkers(airportList);
 		
 	}
 	
-	public void draw() {
+/*	public void draw() {
 		background(0);
-		map.draw();
+		//map.draw();
 		
-	}
+	}*/
 	
 
 }

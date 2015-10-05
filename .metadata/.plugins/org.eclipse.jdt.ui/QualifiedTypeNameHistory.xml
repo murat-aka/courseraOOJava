@@ -4,4 +4,17 @@
 <fullyQualifiedTypeName name="module4.EarthquakeMarker"/>
 <fullyQualifiedTypeName name="java.util.jar.Attributes.Name"/>
 <fullyQualifiedTypeName name="com.sun.org.glassfish.gmbal.NameValue"/>
+<fullyQualifiedTypeName name="module4.CityMarker"/>
+<fullyQualifiedTypeName name="module5.EarthquakeMarker"/>
+<fullyQualifiedTypeName name="module5.CommonMarker"/>
+<fullyQualifiedTypeName name="com.sun.org.apache.bcel.internal.generic.INSTANCEOF"/>
+<fullyQualifiedTypeName name="module5.CityMarker"/>
+<fullyQualifiedTypeName name="java.util.Collections"/>
+<fullyQualifiedTypeName name="module6.EarthquakeMarker"/>
+<fullyQualifiedTypeName name="module6.AirportMap"/>
+<fullyQualifiedTypeName name="com.sun.org.apache.bcel.internal.generic.SIPUSH"/>
+<fullyQualifiedTypeName name="de.fhpotsdam.unfolding.marker.SimplePointMarker"/>
+<fullyQualifiedTypeName name="module6.CommonMarker"/>
+<fullyQualifiedTypeName name="module6.AirportMarker"/>
+<fullyQualifiedTypeName name="java.util.ArrayList"/>
 </qualifiedTypeNameHistroy>

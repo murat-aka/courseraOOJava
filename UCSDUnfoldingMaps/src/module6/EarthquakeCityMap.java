@@ -2,7 +2,11 @@ package module6;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+
+import com.sun.org.apache.bcel.internal.generic.SIPUSH;
 
 import de.fhpotsdam.unfolding.UnfoldingMap;
 import de.fhpotsdam.unfolding.data.Feature;
@@ -12,11 +16,13 @@ import de.fhpotsdam.unfolding.geo.Location;
 import de.fhpotsdam.unfolding.marker.AbstractShapeMarker;
 import de.fhpotsdam.unfolding.marker.Marker;
 import de.fhpotsdam.unfolding.marker.MultiMarker;
+import de.fhpotsdam.unfolding.marker.SimplePointMarker;
 import de.fhpotsdam.unfolding.providers.Google;
 import de.fhpotsdam.unfolding.providers.MBTilesMapProvider;
 import de.fhpotsdam.unfolding.utils.MapUtils;
 import parsing.ParseFeed;
 import processing.core.PApplet;
+import processing.core.PGraphics;
 
 /** EarthquakeCityMap
  * An application with an interactive map displaying earthquake data.
@@ -36,7 +42,7 @@ public class EarthquakeCityMap extends PApplet {
 	private static final long serialVersionUID = 1L;
 
 	// IF YOU ARE WORKING OFFILINE, change the value of this variable to true
-	private static final boolean offline = false;
+	private static final boolean offline = true;
 	
 	/** This is where to find the local tiles, for working without an Internet connection */
 	public static String mbTilesString = "blankLight-1-3.mbtiles";
@@ -61,6 +67,10 @@ public class EarthquakeCityMap extends PApplet {
 	// A List of country markers
 	private List<Marker> countryMarkers;
 	
+	// A List of airport markers
+	private List<Marker> airportList;
+	
+	private ArrayList<String> inZone = new ArrayList<>();
 	// NEW IN MODULE 5
 	private CommonMarker lastSelected;
 	private CommonMarker lastClicked;
@@ -82,10 +92,22 @@ public class EarthquakeCityMap extends PApplet {
 		// FOR TESTING: Set earthquakesURL to be one of the testing files by uncommenting
 		// one of the lines below.  This will work whether you are online or offline
 		//earthquakesURL = "test1.atom";
-		//earthquakesURL = "test2.atom";
+		earthquakesURL = "test2.atom";
 		
 		// Uncomment this line to take the quiz
 		//earthquakesURL = "quiz2.atom";
+		
+		
+		// get features from airport data
+				List<PointFeature> features = ParseFeed.parseAirports(this, "airports.dat");
+				airportList = new ArrayList<Marker>();
+				//HashMap<Integer, Location> airports = new HashMap<Integer, Location>();
+				
+				// create markers from features
+				
+			    
+		
+		
 		
 		
 		// (2) Reading in earthquake data and geometric properties
@@ -96,8 +118,27 @@ public class EarthquakeCityMap extends PApplet {
 		//     STEP 2: read in city data
 		List<Feature> cities = GeoJSONReader.loadData(this, cityFile);
 		cityMarkers = new ArrayList<Marker>();
+		
 		for(Feature city : cities) {
 		  cityMarkers.add(new CityMarker(city));
+		  
+		  String cityy="\""+city.getProperty("country")+"\"";
+		  //System.out.println(city.getProperty("country")); 
+		 
+		  for(PointFeature feature : features) {
+				AirportMarker m = new AirportMarker(feature);
+				
+				//System.out.println(m.getProperty("country"));
+		        if(cityy.equals(m.getProperty("country")) ){
+				m.setRadius(5);
+				//System.out.println(m.getProperties());
+				airportList.add(m);
+		        }
+				// put airport in hashmap with OpenFlights unique id for key
+				//airports.put(Integer.parseInt(feature.getId()), feature.getLocation());
+			
+			}
+		  
 		}
 	    
 		//     STEP 3: read in earthquake RSS feed
@@ -116,22 +157,69 @@ public class EarthquakeCityMap extends PApplet {
 	    }
 
 	    // could be used for debugging
-	    printQuakes();
+	  //  printQuakes();
+	   // sortAndPrint(6);
 	 		
 	    // (3) Add markers to map
 	    //     NOTE: Country markers are not added to the map.  They are used
 	    //           for their geometric properties
+	    
+	    
+		
+
 	    map.addMarkers(quakeMarkers);
 	    map.addMarkers(cityMarkers);
+	    map.addMarkers(airportList);
 	    
+	   
+	    
+	    //AirportMap air=new AirportMap();
+	   // map.addMarkers(air.routeList);
 	    
 	}  // End setup
 	
 	
 	public void draw() {
+	
+		
 		background(0);
 		map.draw();
 		addKey();
+		addKey2();
+		
+	}
+	
+	
+	private void sortAndPrint(int numToPrint){
+		
+	    ArrayList<EarthquakeMarker> mr= new ArrayList<>();
+				  
+	    
+
+	   		
+		for (Marker marker : quakeMarkers)
+		{
+			mr.add((EarthquakeMarker) marker);
+			
+		}
+		
+		Collections.sort(mr);
+		
+		Object[] arr = mr.toArray();
+		
+		if(numToPrint > arr.length)numToPrint = arr.length;
+		
+		for (int i=0  ; i < numToPrint ; i++ )
+		{
+			System.out.println(arr[i].toString());
+			
+		}
+		
+		/*for (int i= arr.length-1 ; i >= arr.length-numToPrint ; i-- )
+		{
+			System.out.println(arr[i].toString());
+			
+		}*/
 		
 	}
 	
@@ -154,6 +242,7 @@ public class EarthquakeCityMap extends PApplet {
 		}
 		selectMarkerIfHover(quakeMarkers);
 		selectMarkerIfHover(cityMarkers);
+		selectMarkerIfHover(airportList);
 		//loop();
 	}
 	
@@ -219,6 +308,12 @@ public class EarthquakeCityMap extends PApplet {
 						quakeMarker.setHidden(true);
 					}
 				}
+				
+				for (Marker mhide : airportList) {
+					
+						mhide.setHidden(true);
+					
+				}
 				return;
 			}
 		}		
@@ -246,6 +341,23 @@ public class EarthquakeCityMap extends PApplet {
 						mhide.setHidden(true);
 					}
 				}
+				
+				
+				for (Marker mhide: airportList) {
+					if (mhide.getDistanceTo(marker.getLocation()) 
+							> marker.threatCircle()) {
+						mhide.setHidden(true);
+						
+						
+					}
+					else{
+						AirportMarker mhide2 = (AirportMarker) mhide;
+						mhide2.setInZone(true);
+						inZone.add("\n"+mhide2.getStringProperty("city"));
+						
+					}
+					
+				}
 				return;
 			}
 		}
@@ -260,6 +372,31 @@ public class EarthquakeCityMap extends PApplet {
 		for(Marker marker : cityMarkers) {
 			marker.setHidden(false);
 		}
+		
+		for(Marker marker : airportList) {
+			marker.setHidden(false);
+			AirportMarker mhide2 = (AirportMarker) marker;
+			mhide2.setInZone(false);
+			inZone = new ArrayList<>();
+		}
+	}
+	
+	
+	private void addKey2() {	
+		// Remember you can use Processing's graphics methods here
+		fill(255, 250, 240);
+		
+		int xbase = 25;
+		int ybase = 350;
+		
+		rect(xbase, ybase, 150, 250);
+			
+		fill(0);	
+	    text(inZone.toString(), xbase, ybase+70);
+		
+			
+		
+		
 	}
 	
 	// helper method to draw key in GUI

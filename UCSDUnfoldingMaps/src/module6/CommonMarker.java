@@ -15,10 +15,14 @@ public abstract class CommonMarker extends SimplePointMarker {
 	// Records whether this marker has been clicked (most recently)
 	protected boolean clicked = false;
 	
+	
+	
 	public CommonMarker(Location location) {
 		super(location);
 	}
 	
+
+
 	public CommonMarker(Location location, java.util.HashMap<java.lang.String,java.lang.Object> properties) {
 		super(location, properties);
 	}
@@ -45,8 +49,13 @@ public abstract class CommonMarker extends SimplePointMarker {
 			if (selected) {
 				showTitle(pg, x, y);
 			}
+	
 		}
 	}
+	
+	
+
+
 	public abstract void drawMarker(PGraphics pg, float x, float y);
 	public abstract void showTitle(PGraphics pg, float x, float y);
 }
